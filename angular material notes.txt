@@ -1,0 +1,214 @@
+https://hub.packtpub.com/bootstrap-vs-material-design-for-your-next-web-or-app-development-project/
+https://www.sitepoint.com/angular-material-design-components/
+https://www.c-sharpcorner.com/article/a-look-into-angular-7-material-design/
+https://www.angularjswiki.com/material/
+
+Material Design principles and guidelines for Angular.
+
+It contains various UI components, such as:
+
+form controls (input, select, checkbox,b date picker and sliders etc.),
+navigation patterns (menus, sidenav and toolbar)
+layout components (grids, cards, tabs and lists )
+buttons
+indicators (progress bars and spinners)
+popups and modals
+data tables with headers and pagination etc.
+
+Pre-requisite of s/w:
+
+Node (6.9.0+) and NPM (3+)
+Angular CLI
+
+
+create the Angular project using the Angular CLI. 
+
+ng new material-design1
+
+cd angularmaterialdemo
+ng serve
+
+application will be running in http://localhost:4200
+
+ng g component login
+ng g component CourseList
+ng g component CourseCreate
+
+in app.module.ts add the router configuration
+
+
+	import { RouterModule, Routes } from  '@angular/router';
+ 
+const  appRoutes:  Routes  = [
+{ path:  'customer-list', component:  CustomerListComponent },
+{ path:  'customer-create', component:  CustomerCreateComponent },
+{ path:  'login',component:  LoginComponent},
+{ path:  '',redirectTo:  '/login',pathMatch:  'full'},
+];
+
+create proj using ng new
+
+uninstall certain dependency
+
+npm uninstall @angular/core@^7.2.0
+
+install angular material & cdk
+
+npm install --save @angular/material @angular/cdk @angular/core @angular/common
+
+HammerJS used for Gestures Support - like sliders etc
+
+npm install --save hammerjs
+
+then in main.ts , import hammerjs
+
+	import 'hammerjs';
+
+Angular Material has a bunch of pre-built themes. to choose 
+	
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+import the needed theme
+
+Angular Material comes with a mat-icon component for icons:
+
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+Enabling animations:
+
+@angular/animations module and include the BrowserAnimationsModule in your application module configuration.
+
+	npm install --save @angular/animations
+
+in app.module.ts:
+
+	add browserAnimationModule under imports
+	
+create material module and add to app.module
+
+in material module 
+
+import all component needed
+
+import { NgModule } from  '@angular/core';
+import {MatNativeDateModule,MatSnackBarModule,MatIconModule,MatDialogModule, MatButtonModule, MatTableModule, MatPaginatorModule , MatSortModule,MatTabsModule, MatCheckboxModule, MatToolbarModule, MatCard, MatCardModule, MatFormField, MatFormFieldModule, MatProgressSpinnerModule, MatInputModule } from  '@angular/material';
+import {MatDatepickerModule} from  '@angular/material/datepicker';
+import {MatRadioModule} from  '@angular/material/radio';
+import {MatSelectModule} from  '@angular/material/select';
+import {MatSliderModule} from  '@angular/material/slider';
+import {MatDividerModule} from  '@angular/material/divider';
+
+@NgModule({
+imports: [MatTabsModule,MatDividerModule,MatSliderModule,MatSelectModule,MatRadioModule,MatNativeDateModule,MatDatepickerModule,MatSnackBarModule,MatIconModule,MatDialogModule,MatProgressSpinnerModule,MatButtonModule,MatSortModule,MatTableModule,MatTabsModule, MatCheckboxModule, MatToolbarModule, MatCardModule, MatFormFieldModule, MatProgressSpinnerModule, MatInputModule, MatPaginatorModule],
+exports: [MatTabsModule,MatDividerModule,MatSliderModule,MatSelectModule,MatRadioModule,MatNativeDateModule,MatDatepickerModule,MatSnackBarModule,MatIconModule,MatDialogModule,MatProgressSpinnerModule,MatButtonModule,MatSortModule, MatCheckboxModule, MatToolbarModule, MatCardModule,MatTableModule,MatTabsModule, MatFormFieldModule, MatProgressSpinnerModule, MatInputModule, MatPaginatorModule],
+
+})
+
+Then coding in html pages can be done
+==========================================================
+
+demo 1:
+
+create app.comp.ts
+
+import { Component } from "@angular/core";
+
+@Component({
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
+})
+export class AppComponent {
+  title = "my app";
+}
+
+create app.comp.html:
+
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+	<my-mat-component></my-mat-component>
+</div>
+
+create a new component (child):
+
+ng g c "my-mat-comp"
+
+in my-mat-comp.ts:
+
+export class MyMatComponent {
+  public tasks: [];
+
+  constructor() {
+    this.tasks = [];
+  }
+
+  addTask(task: string) {
+    if (task === "") return;
+    this.tasks.push({
+      text: task,
+      done: false
+    });
+  }
+  removeTask(task) {
+    this.tasks.splice(this.tasks.indexOf(task), 1);
+  }
+  toggle(task) {
+    task.done = !task.done;
+  }
+}
+
+in html;
+
+<mat-form-field>
+	<input matInput placeholder="Add new task" #newtaskinput>
+</mat-form-field>
+<button [disabled]="newtaskinput.value == ''" mat-raised-button color="primary" (click)="addTask(newtaskinput.value); newtaskinput.value = ''">Add</button>
+<mat-card *ngIf="tasks.length > 0">
+	<mat-list>
+		<mat-list-item *ngFor="let task of tasks;let i = index">
+			<mat-divider *ngIf="i != 0"></mat-divider>
+			<mat-slide-toggle (change)="toggle(task)" [checked]="!!task.done" color="primary">
+				<span [ngClass]="{done:task.done}">{{task.text}}</span>
+			</mat-slide-toggle>
+			<button  matTooltip="Delete task" matTooltipPosition="above" mat-icon-button (click)="removeTask(task)">
+				<mat-icon aria-label="Example icon-button with a heart icon">delete</mat-icon>
+		</button>
+		</mat-list-item>
+	</mat-list>
+</mat-card>
+
+in css:
+.done {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+mat-card {
+  width: 90%;
+  max-width: 400px;
+  margin: 20px auto 0 auto;
+}
+mat-slide-toggle {
+  width: 100%;
+}
+.mat-list-item-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+mat-divider {
+  top: 0;
+  bottom: auto;
+}
+mat-icon {
+  color: grey;
+}
+.mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+
+
+
+
+
+
+	
